@@ -8,44 +8,73 @@ import altair as alt
 import streamlit as st
 import plotly.express as px
 
-col1, col2 = st.columns([1, 2])
+#col1, col2 = st.columns([3, 1])
 
-col1.markdown(" # Songs app!")
-col2.markdown(" Brief intro to the app")
+#col1.markdown(" # Top Songs on Spotify!")
+st.markdown(""" <style> .font_title {
+font-size:40px ; font-family: 'courier'; color: black;text-align: center;} 
+</style> """, unsafe_allow_html=True)
 
-df = pd.read_csv('spotify-2023.csv', encoding='ISO-8859-1')
+st.markdown(""" <style> .font_text {
+font-size:20px ; font-family: 'sans'; color: black;text-align: left;} 
+</style> """, unsafe_allow_html=True)
 
-# Removing incorrect data from file 
-target_value = 'BPM110KeyAModeMajorDanceability53Valence75Energy69Acousticness7Instrumentalness0Liveness17Speechiness3'
-df = df[df['streams'] != target_value]
-df['streams'] = df['streams'].astype(int)
+##########
 
-# Creating a new column with standardized values for #streams
-scaler = StandardScaler()
-df['s_streams'] = scaler.fit_transform(df[['streams']])
+st.markdown('<p class="font_title">Tops Songs on Spotify</p>', unsafe_allow_html=True)
 
-option = st.selectbox('select column name for showing the displot',('danceability_%', 'valence_%', 'energy_%',
-       'acousticness_%', 'instrumentalness_%', 'liveness_%', 'speechiness_%'))
-st.write('You selected:', option)
-plt2=sns.displot(df, x=option, hue="mode", multiple="stack")
-st.pyplot(plt2.fig)
+tab1, tab2 = st.tabs(["Introduction", "Data and variables"])
 
-option = st.selectbox('select column name for showing the scatterplot',('danceability_%', 'valence_%', 'acousticness_%', 'instrumentalness_%', 'liveness_%', 'speechiness_%'))
-
-fig = px.scatter(df,
-    x=option,
-    y="energy_%",
-    size="streams",
-    color="mode",
-    hover_name="track_name",
-    log_x=True,
-    size_max=60,
-)
-tab1, tab2 = st.tabs(["Streamlit theme (default)", "Plotly native theme"])
 with tab1:
-    # Use the Streamlit theme.
-    # This is the default. So you can also omit the theme argument.
-    st.plotly_chart(fig, theme="streamlit", use_container_width=True)
+    st.markdown('<p class="font_text">Ever wonder what makes a song a hit? If so, you are at the right place! Here we\'ll explore the data and try to answer the following questions. </p>', unsafe_allow_html=True)
+
+    st.markdown("""<p class="font_text">
+    - What musical attributes (e.g., tempo, danceability, energy) are common among top-streamed songs?</p>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""<p class="font_text">
+    - Are there any trends or patterns in terms of the mode of the song?</p>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""<p class="font_text">
+    - Do certain artists have a consistent presence among top-streamed songs? </p>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""<p class="font_text">
+    - Are there any temporal or seasonal trends in song popularity? </p>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""<p class="font_text">
+    - Are there any trends in a song\'s performance with respect to the number of artists involved? </p>
+    """, unsafe_allow_html=True)
+
+
 with tab2:
-    # Use the native Plotly theme.
-    st.plotly_chart(fig, theme=None, use_container_width=True)
+    df = pd.read_csv('spotify-2023.csv', encoding='ISO-8859-1')
+
+    # Removing incorrect data from file 
+    target_value = 'BPM110KeyAModeMajorDanceability53Valence75Energy69Acousticness7Instrumentalness0Liveness17Speechiness3'
+    df = df[df['streams'] != target_value]
+    df['streams'] = df['streams'].astype(int)
+
+    # Creating a new column with standardized values for #streams
+    scaler = StandardScaler()
+    df['s_streams'] = scaler.fit_transform(df[['streams']])
+    
+    dataset = st.checkbox('Show songs dataset')
+    if dataset == True:
+        st.table(df.describe())
+        st.markdown('<p class="font_subtext">Table 1: Spotify\'s top songs </p>', unsafe_allow_html=True)
+
+
+    options = st.multiselect('Select 2 variables to plot', ['danceability_%', 'valence_%', 'energy_%', 'acousticness_%', 'instrumentalness_%', 'liveness_%', 'speechiness_%'], default=None, max_selections=2, placeholder="Choose an option", disabled=False, label_visibility="visible")
+
+    fig1 = px.scatter(df,
+        y=options[0],
+        x=options[1],
+        size="streams",
+        color="mode",
+        hover_name="track_name",
+        size_max=15,
+    )
+    st.plotly_chart(fig1, theme=None, use_container_width=True)

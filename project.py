@@ -22,29 +22,28 @@ font-size:20px ; font-family: 'sans'; color: black;text-align: left;}
 
 st.markdown('<p class="font_title">Tops Songs on Spotify</p>', unsafe_allow_html=True)
 
-tab1, tab2, tab3, tab4 = st.tabs(["Introduction", "Data and variables", "Plots", "Predictions"])
+tab1, tab2, tab3, tab4, tab5 = st.tabs(["Introduction", "Data and variables", "Plots", "Predictions", "Conclusions"])
+
 
 with tab1:
-    st.markdown('<p class="font_text">Ever wonder what makes a song a hit? If so, you are at the right place! Here we\'ll explore the data and try to answer the following questions. </p>', unsafe_allow_html=True)
+    st.markdown('<p class="font_text">Music is a universal and ever-present force in our lives. It\'s likely that you\'ve already encountered several songs today. While music has long captivated the attention of researchers across diverse fields such as psychology, neuroscience, sociology, and physiology, this data science project takes a different lens. Our primary focus is to delve into the realm of Spotify\'s top-streamed songs, aiming to unveil underlying patterns and insights that decode the anatomy of a hit song.</p>', unsafe_allow_html=True)
 
-    st.markdown("""<p class="font_text">
-    - What musical attributes (e.g., tempo, danceability, energy) are common among top-streamed songs?</p>
+    st.markdown("""<p class="font_text">In pursuit of this mission, this project will address a series of overarching questions:</p>
     """, unsafe_allow_html=True)
 
     st.markdown("""<p class="font_text">
-    - Are there any trends or patterns in terms of the mode of the song?</p>
+    - Musical Characteristics: What key music traits, like tempo, dance-friendliness, and energy levels, do the top-streamed songs have in common?
     """, unsafe_allow_html=True)
 
     st.markdown("""<p class="font_text">
-    - Do certain artists have a consistent presence among top-streamed songs? </p>
+    - Mode Patterns: Are there discernible trends or patterns in the musical modes utilized in top-streamed songs? </p>
     """, unsafe_allow_html=True)
 
     st.markdown("""<p class="font_text">
-    - Are there any temporal or seasonal trends in song popularity? </p>
+    - Temporal Popularity: Are there temporal or seasonal trends that influence song popularity?</p>
     """, unsafe_allow_html=True)
 
-    st.markdown("""<p class="font_text">
-    - Are there any trends in a song\'s performance with respect to the number of artists involved? </p>
+    st.markdown("""<p class="font_text">Through this exploration, we aim to unlock the secrets behind the melodies that captivate global audiences, shedding light on the multifaceted world of music in the digital age. </p>
     """, unsafe_allow_html=True)
 
 
@@ -83,6 +82,7 @@ with tab2:
         ax.axis('equal')
     st.pyplot(fig3) 
 
+    #Creating a comparision of beats per minute for different modes
     chart = alt.Chart(df).mark_bar().encode(
         alt.X('bpm:Q', bin=True),
         alt.Y('count():Q', title='Frequency'),
@@ -92,8 +92,9 @@ with tab2:
     ).configure_axisY(
         grid=True
     )
-    st.markdown('<p class="font_subheader">Plot of beats per minute</p>', unsafe_allow_html=True)
+    st.markdown('<p class="font_subheader">Frequency plot of beats per minute for modes</p>', unsafe_allow_html=True)
     st.altair_chart(chart, use_container_width=True)
+
 
 with tab3:
     st.markdown("Note that the size of the bubbles in the following plots correspond to the number of times a particular song was streamed")
@@ -108,11 +109,11 @@ with tab3:
         hover_name="track_name",
         size_max=25,
     )
-    st.markdown('<p class="font_subheader">Plot of the two selected variables</p>', unsafe_allow_html=True)
+    st.markdown(f'<p class="font_subheader">Plot of {options[0]} and {options[1]}</p>', unsafe_allow_html=True)
     st.plotly_chart(fig1, theme=None, use_container_width=True)
 
     #Creating a scatterplot of user selected charts
-    chart_options = st.multiselect('Select 2 song attributes to plot', ['in_spotify_charts', 'in_apple_charts', 'in_deezer_charts'], default=['in_spotify_charts', 'in_apple_charts'], max_selections=2, placeholder="Choose an option", disabled=False, label_visibility="visible")
+    chart_options = st.multiselect('Select 2 charts to plot', ['in_spotify_charts', 'in_apple_charts', 'in_deezer_charts'], default=['in_spotify_charts', 'in_apple_charts'], max_selections=2, placeholder="Choose an option", disabled=False, label_visibility="visible")
 
     fig1 = px.scatter(df,
         y=chart_options[0],
@@ -122,5 +123,80 @@ with tab3:
         hover_name="track_name",
         size_max=25,
     )
-    st.markdown('<p class="font_subheader">Plot of the two selected variables</p>', unsafe_allow_html=True)
+    st.markdown(f'<p class="font_subheader">Plot of {chart_options[0]} and {chart_options[1]}</p>', unsafe_allow_html=True)
     st.plotly_chart(fig1, theme=None, use_container_width=True)
+
+    #Creating a scatterplot of the month/day variation in streams 
+    fig1 = px.scatter(df,
+        y=df['released_month'],
+        x=df['released_day'],
+        size="streams",
+        color="mode",
+        hover_name="track_name",
+        size_max=25,
+    )
+    st.markdown('<p class="font_subheader">Plot of the Seasonal variation</p>', unsafe_allow_html=True)
+    st.plotly_chart(fig1, theme=None, use_container_width=True)
+
+
+with tab4:
+    #Creating a regression plot of your selection and streams
+    reg_option = st.selectbox('Select the variable for regression plot:', ['in_spotify_playlists', 'in_spotify_charts', 'in_apple_playlists', 'in_apple_charts', 'in_deezer_charts', 'bpm', 'danceability_%', 'valence_%', 'energy_%', 'acousticness_%', 'instrumentalness_%', 'liveness_%', 'speechiness_%'])
+
+    # Sidebar with slider
+    st.sidebar.header("Adjust the selected variable for predicted #streams:")
+    new_x = st.sidebar.slider("X Value", min_value=int(df[reg_option].min()), max_value=int(df[reg_option].max()), value=int(df[reg_option].mean()))
+
+    X = df[reg_option].values.reshape(-1, 1)
+    Y = df['s_streams'].values
+    model = LinearRegression()
+    model.fit(X, Y)
+    predicted_y = model.predict(np.array([[new_x]]))
+
+    y_predicted = np.abs(predicted_y[0]*np.std(df['s_streams'])*np.mean(df['streams']))
+
+    check_mark = st.checkbox('Show predicted number of streams')
+    if check_mark==True:
+        st.markdown(f'<p class="font_text">Predicted number of streams for X={new_x}: {y_predicted:.2f}</p>', unsafe_allow_html=True)
+    
+    st.markdown(f'<p class="font_subheader">Regression plot for {reg_option}</p>', unsafe_allow_html=True)
+
+    # Create a scatter plot with the regression line
+    plt.figure(figsize=(8, 6))
+    plt.scatter(df[reg_option], df['s_streams'], label='Data Points')
+    plt.plot(df[reg_option], model.predict(X), color='red', label='Regression Line')
+    plt.grid(False)
+    plt.xlabel(reg_option)
+    plt.ylabel('streams')
+    plt.legend()
+    st.pyplot(plt)
+    st.markdown(f'<p class="font_text">*Note that the streams values on y-axis are standardized values</p>', unsafe_allow_html=True)
+    
+
+with tab5:
+    st.markdown('<p class="font_subheader">Musical Characteristics</p>', unsafe_allow_html=True)
+    
+    st.markdown("""<p class="font_text">
+    - It appears there is a positive relationship between the valence and energy of the songs. More songs tend to receive high ratings for these musical attributes.
+    """, unsafe_allow_html=True)
+    st.markdown("""<p class="font_text">
+    - Songs that achieve higher rankings on Apple charts do not consistently receive higher rankings on Spotify charts. This trend holds true for Apple charts compared to Deezer charts as well. More investigation is required for the relationship between Spotify charts and Deezer charts.
+    """, unsafe_allow_html=True)
+
+    st.markdown('<p class="font_subheader">Mode Patterns</p>', unsafe_allow_html=True)
+    st.markdown("""<p class="font_text">
+    - A clear pattern is coming to light concerning the song modes. In our analysis, we\'ve observed that the beats per minute (BPM) frequency for songs in the Major mode surpasses that of the Minor mode.
+    """, unsafe_allow_html=True)
+    st.markdown("""<p class="font_text">
+    - From this dataset, it's clear that Major mode songs receive more streams than Minor mode songs. However, it's important to note that this dataset does not have an equal number of songs from each category. Therefore, to make a definitive statement, further investigation with different datasets is necessary.
+    """, unsafe_allow_html=True)
+
+    st.markdown('<p class="font_subheader">Temporal Popularity</p>', unsafe_allow_html=True)
+    st.markdown("""<p class="font_text">
+    - It appears that there is no apparent connection between the month a song is released and its streaming frequency. This suggests that great music finds its audience year-round, regardless of the release date.
+    """, unsafe_allow_html=True)
+
+    st.markdown('<p class="font_subheader">Bottomline</p>', unsafe_allow_html=True)
+    st.markdown("""<p class="font_text">
+    Our analysis revealed several key insights. There appears to be a positive correlation between valence and energy in songs, with many receiving high ratings for these attributes. We also found that high rankings on Apple charts don\'t consistently translate to success on Spotify or Deezer charts, prompting further investigation. Major mode songs tend to have a higher beats per minute (BPM) frequency than Minor mode songs, although data imbalances should be considered. Lastly, the month of a song\'s release doesn\'t significantly affect its streaming frequency, suggesting music finds an audience year-round.
+    """, unsafe_allow_html=True)

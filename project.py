@@ -18,11 +18,7 @@ df['streams'] = df['streams'].astype(int)
 scaler = StandardScaler()
 df['s_streams'] = scaler.fit_transform(df[['streams']])
 
-option = st.selectbox('select column name for showing the displot',('danceability_%', 'valence_%', 'energy_%',
-       'acousticness_%', 'instrumentalness_%', 'liveness_%', 'speechiness_%'))
-st.write('You selected:', option)
-plt2=sns.displot(df, x=option, hue="mode", multiple="stack")
-st.pyplot(plt2.fig)
+
 
 fig = px.scatter(df,
     x="valence_%",

@@ -31,7 +31,7 @@ with tab1:
     """, unsafe_allow_html=True)
     
     st.markdown("""<p class="font_text">
-    By harnessing the power of machine learning, we analyze song attributes such as beats per minute, danceability, and energy, unraveling the intricate patterns that contribute to a song's success. Walk in the footsteps of music professionals, exploring the art and science behind what makes a song resonate with audiences.
+    By harnessing the power of machine learning, this app analyzes song attributes such as beats per minute, danceability, and energy, unraveling the intricate patterns that contribute to a song's success. Walk in the footsteps of music professionals, exploring the art and science behind what makes a song resonate with audiences.
     """, unsafe_allow_html=True)
     
     st.markdown("""<p class="font_text">
@@ -221,20 +221,16 @@ with tab5:
 
 with tab6:
     st.markdown("""<p class="font_text">
-    Hey there! I'm Abhilasha, a graduate student immersed in the fascinating world of data science at Michigan State
+    Hey there! I'm Abhilasha, a graduate student in data science at Michigan State
     University. I'm passionate about unraveling insights hidden within data, especially in the realms of music, 
     sports, and health. When I'm not crunching numbers, I find solace in the rhythm of my runs and the artistry of crocheting.
     """, unsafe_allow_html=True)
 
     st.markdown("""<p class="font_text">
-    I have created this Streamlit app with the goal to furnish music industry professionals with the transformative 
-    power of data-driven insights. Picture it as a symphony of success, where the precision of data harmonizes 
+    I have created this Streamlit app for music lovers and industry professionals, 
+    aiming to provide transformative, data-driven insights into the world of music. 
+    Picture it as a symphony of success, where the precision of data harmonizes 
     seamlessly with the boundless creativity of the industry.
-    """, unsafe_allow_html=True)
-
-    st.markdown("""<p class="font_text">
-    Should you have any queries or wish to share your thoughts on this musical endeavor, don't hesitate to reach out 
-    at abhilashajagtap2@gmail.com. Let's orchestrate success together. Cheers!
     """, unsafe_allow_html=True)
 
 

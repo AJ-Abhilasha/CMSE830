@@ -167,7 +167,7 @@ with tab3:
 
 with tab4:
     st.markdown("""<p class="font_text">
-    Here, we embark on predicting the song's streaming frequency, driven by the chosen song attribute(s) 
+    Here, we embark on predicting how many times your song will be streamed, driven by your chosen song attribute(s) 
     and their respective values. Feel free to experiment with any number of attributes from the list. 
     Tweak each attribute's value using the sliders to uncover the diverse predictions and explore the dynamic 
     impact of these features on your song's streaming potential.

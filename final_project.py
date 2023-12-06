@@ -132,7 +132,7 @@ with tab3:
     """, unsafe_allow_html=True)
 
     # Creating the expander for song attributes
-    with st.expander("Explore song attributes"):
+    with st.expander("**Explore song attributes**"):
         options = st.multiselect('Select 2 song attributes to plot', ['danceability_%', 'valence_%', 'energy_%', 'acousticness_%', 'instrumentalness_%', 'liveness_%', 'speechiness_%'], default=['valence_%', 'energy_%'], max_selections=2, placeholder="Choose an option", disabled=False, label_visibility="visible")
 
         fig1 = px.scatter(df,
@@ -149,7 +149,7 @@ with tab3:
     #st.markdown("Note that the size of the bubbles in the following plots correspond to the number of times a particular song was streamed")
     
     # Creating a scatterplot of user selected charts within the expander for streaming platforms
-    with st.expander("Explore charts"):
+    with st.expander("**Explore songs on different charts**"):
         chart_options = st.multiselect('Select 2 charts to plot', ['in_spotify_charts', 'in_apple_charts', 'in_deezer_charts'], default=['in_spotify_charts', 'in_apple_charts'], max_selections=2, placeholder="Choose an option", disabled=False, label_visibility="visible")
 
         fig1 = px.scatter(df,

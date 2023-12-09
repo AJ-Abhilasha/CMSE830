@@ -203,6 +203,11 @@ with tab2:
             button = st.checkbox("Visualize these results")
             if button:
                 attributes = ['danceability', 'valence', 'energy', 'acousticness', 'instrumentalness', 'liveness']
+                
+                st.markdown(f"""<p class="font_text">The next plot is a visualization of the song attributes corresponding to the top {number} songs listed in the table above.
+                Change the selections in the selectbox below to get a better insight of what the attribute scores for each of the songs are! 
+                </p>""", unsafe_allow_html=True)
+
 
                 multi_options = st.multiselect('Select the song attributes', attributes, default=['danceability', 'valence', 'energy', 'liveness'], max_selections=7, placeholder="Choose an option", disabled=False, label_visibility="visible")
 
@@ -212,6 +217,10 @@ with tab2:
 
                 # Display the Plotly chart in Streamlit
                 st.plotly_chart(fig)
+
+                st.markdown(f"""<p class="font_text">Next, you can explore how different variables interact with each other. In the following plot you may select 
+                2 attributes to visualize. The size of the bubbles indicate the number of times a song was streamed. Bigger the bubble, more popular the song is. The colors are
+                representative of the mode of the particular song (major mode (blue) corresponds to uplifting and happy music whereas minor mode (red) conveys sad feelings).</p>""", unsafe_allow_html=True)
 
                 options = st.multiselect('Select 2 song attributes to plot', ['beats_per_minute', 'danceability', 'valence', 'energy', 'acousticness', 'instrumentalness', 'liveness', 'speechiness'], default=['valence', 'energy'], max_selections=2, placeholder="Choose an option", disabled=False, label_visibility="visible")
 
@@ -223,7 +232,7 @@ with tab2:
                     hover_name="track_&_artist",
                     size_max=50,
                 )
-                st.markdown(f'<p class="font_subheader">Plot of {options[0]} and {options[1]}</p>', unsafe_allow_html=True)
+                
                 st.plotly_chart(fig1, theme=None, use_container_width=True)
 
     
@@ -290,4 +299,7 @@ with tab4:
     the artistry of crocheting.
     """, unsafe_allow_html=True)
     st.write("[LinkedIn](https://www.linkedin.com/in/abhilasha-jagtap/)")
+
+
+
 

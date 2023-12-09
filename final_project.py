@@ -205,7 +205,8 @@ with tab2:
                 attributes = ['danceability', 'valence', 'energy', 'acousticness', 'instrumentalness', 'liveness']
                 
                 st.markdown(f"""<p class="font_text">The next plot is a visualization of the song attributes corresponding to the top {number} songs listed in the table above.
-                Change the selections in the selectbox below to get a better insight of what the attribute scores for each of the songs are! 
+                Change the selections in the selectbox below to get a better insight of what the attribute scores for each of the songs are! You can hover over the lines and
+                view the details about the attributes and the song.
                 </p>""", unsafe_allow_html=True)
 
 
@@ -220,7 +221,8 @@ with tab2:
 
                 st.markdown(f"""<p class="font_text">Next, you can explore how different variables interact with each other. In the following plot you may select 
                 2 attributes to visualize. The size of the bubbles indicate the number of times a song was streamed. Bigger the bubble, more popular the song is. The colors are
-                representative of the mode of the particular song (major mode (blue) corresponds to uplifting and happy music whereas minor mode (red) conveys sad feelings).</p>""", unsafe_allow_html=True)
+                representative of the mode of the particular song (major mode (blue) corresponds to uplifting and happy music whereas minor mode (red) conveys sad feelings). 
+                You can hover over the bubbles to see the details about that song.</p>""", unsafe_allow_html=True)
 
                 options = st.multiselect('Select 2 song attributes to plot', ['beats_per_minute', 'danceability', 'valence', 'energy', 'acousticness', 'instrumentalness', 'liveness', 'speechiness'], default=['valence', 'energy'], max_selections=2, placeholder="Choose an option", disabled=False, label_visibility="visible")
 
